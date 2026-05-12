@@ -1,41 +1,63 @@
-def p_stat():               #player stats
-    hea = 10
-    atk = 4
-    defd = 1
-    return hea, atk, defd
+import random as ra, math as ma, sys, os 
 
-def e_stat():               #enemy stats
-    e_hea = 15
-    e_atk = 5
-    return e_hea, e_atk
+#Stats for player and enemies
+class Stats:
+    def __init__(self, attack, health, defense):               
+        self.attack = attack
+        self.health = health
+        self.defense = defense
 
-def game_loop():            #main loop
-    e_h, e_a = e_stat()
-    p_h, p_a, p_d = p_stat()
-    while(p_h >= 0 and e_h >= 0):
-        print(f"Enemy Health: {e_h}")
-        print(f"Player Health: {p_h}")
-        c = input("\nPress [A] for Attack or [D] for Defend.\n")          #turns
-        if c == "A" or c == "a":
-            print("You attacked!")
-            e_h = e_h - p_a
-            print("Enemy attacked you back!\n")
-            p_h = p_h - e_a
-            if p_h <= 0:
-                print("You died!")
-                break
-            if e_h <= 0:
-                print("You killed the enemy.")
-                break
-        elif c == "D" or c == "d":
-            print("You Defended.")
-            p_h = p_h - (e_a - p_d)
-            if p_h <= 0:
-                print("You died!")
-                break
+class Player(Stats):
+    pass
+class Enemy(Stats):
+    pass
 
+#misc
+player = Player(5, 15, 2)
+in_combat = False
+
+#main game loop
+def game_loop():
+    global in_combat
+    while(True):
+        if not in_combat:
+            c = input("Press [E] to explore. \n")
+            os.system('cls' if os.name == 'nt' else 'clear')
+            if c == "E" or c == "e":
+                print("You explore...\n")
+                encount = ra.randint(1,5)
+                if encount == 1:
+                    in_combat = True
+                    enemy = Enemy(ra.randint(1,5), ra.randint(10,20), ra.randint(0,3))
+                else:
+                    in_combat = False
+            else:
+                print("Put the correct terms.")
+        
         else:
-            print("Please Put in the correct terms.\n")
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"Enemy Health: {enemy.health}")
+            print(f"Player Health: {player.health}")
+            c = input("\nPress [A] for Attack or [D] for Defend.\n")          #turns
+            if c == "A" or c == "a":
+                print("You attacked!")
+                enemy.health -= ma.ceil(player.attack * (1 - enemy.defense / 100)) 
+                print("Enemy attacked you back!\n")
+                player.health -= ma.ceil(enemy.attack * (1 - player.defense / 100))
+                if player.health <= 0:
+                    print("You died!")
+                    sys.exit()
+                if enemy.health <= 0:
+                    print("You killed the enemy.")
+                    in_combat = False
+            elif c == "D" or c == "d":
+                print("You Defended.")
+                player.health -= ma.ceil(enemy.attack * (1 - player.defense / 100))
+                if player.health <= 0:
+                    print("You died!")
+                    sys.exit()
+            else:
+                print("\nPlease Put in the correct terms.\n")
 
 
 
