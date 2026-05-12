@@ -15,9 +15,9 @@ def game_loop():            #main loop
     while(p_h >= 0):
         print(f"Enemy Health: {e_h}")
         print(f"Player Health: {p_h}")
-        c = input("Press [A] for Attack or [D] for Defend.\n")          #turns
+        c = input("\nPress [A] for Attack or [D] for Defend.\n")          #turns
         if c == "A" or "a":
-            print("You attacked!")
+            print("You attacked!\n")
             e_h = e_h - p_a
             print("Enemy attacked you back!")
             p_h = p_h - e_a
