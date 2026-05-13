@@ -1,17 +1,32 @@
 import random as ra, math as ma, sys, os 
 from Stat import Player, Enemy
 
+
 #Misc
+def Name():
+    p_name = input("Your Name: ")
+    return p_name
 in_combat = False
-player = Player(5, 15, 2)
+player = Player(Name(), 10, 100, 2)
+enemy_names = ["Goblin", "Orc", "Troll", "Bandit", "Wolf", "Slime", "Gnome"]
+enemy_drops = {
+    "Wolf": "Fur",
+    "Goblin": "Leather",
+    "Orc" : "placeholder",
+    "Troll" : "placeholder",
+    "Bandit" : "placeholder",
+    "Slime" : "Slime Ball",
+    "Gnome" : "placeholder",
+}
 
 #Main game loop
 def game_loop():
     global in_combat
     while(True):
-        #Exploring
+
+#Exploring
         if not in_combat:
-            c = input("Press [E] to explore. \n")
+            c = input("Press [E] to explore | [P] for profile | [I] for inventory.\n")
             os.system('cls' if os.name == 'nt' else 'clear')
             if c == "E" or c == "e":
                 print("You explore...\n")
@@ -19,20 +34,41 @@ def game_loop():
                 if encount == 1:
                     in_combat = True
                     enemy = Enemy(
+                        ra.choice(enemy_names),
                         ra.randint(1,5),
                         ra.randint(10,20),
                         ra.randint(0,3),
                         1,
-                        ra.randint(100,200)
+                        ra.randint(100,200),
+                        ra.randint(50,100),
+                        ""
                         )
+                    enemy.drop = enemy_drops.get(enemy.name, None)
                 else:
                     in_combat = False
+
+#PLayer Profile
+            elif c == "P" or c == "p":
+                print("Player Profile\n"
+                f"Player Name: {player.name}\n"
+                f"Level: {player.lvl}\n"
+                f"Exp: {player.exp}/{int(player.exp2lvlup())}\n"
+                f"Coins: {player.coin}\n"
+                f"Special Coins: {player.s_coin}\n"
+                f"Health: {player.health}\n"
+                f"Attack: {player.attack}\n"
+                f"Defense: {player.defense}\n")
+            elif c == "I" or c == "i":
+                print("Inventory: ")
+                for k, v in player.inventory.items():
+                    print(f"{k} : {v}")
             else:
-                print("Put the correct terms.")
-        
-        #During Combat
+                print("Put the correct terms.\n")
+
+#During Combat
         else:
             os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"Enemy: {enemy.name}")
             print(f"Enemy Health: {enemy.health}")
             print(f"Player Health: {player.health} Player's Level: {player.lvl} EXP: {player.exp}")
             c = input("\nPress [A] for Attack or [D] for Defend.\n")
@@ -43,9 +79,18 @@ def game_loop():
                     print("You died!")
                     sys.exit()
                 if enemy.health <= 0:
-                    print("\nYou killed the enemy.")
-                    player.exp += enemy.exp
                     os.system('cls' if os.name == 'nt' else 'clear')
+                    print(f"\nYou killed the {enemy.name}.")
+                    player.exp += enemy.exp
+                    print(f"Exp Gained: {enemy.exp}")
+                    player.coin += enemy.coin
+                    item_encount = ra.randint(1,2)
+                    if item_encount == 1:
+                        print(f"You found and item: {enemy.drop}")
+                        if enemy.drop in player.inventory:
+                            player.inventory[enemy.drop] += 1
+                        else:
+                            player.inventory[enemy.drop] = 1
                     if player.exp >= player.exp2lvlup():
                         player.lvl += 1
                         player.health += 5
