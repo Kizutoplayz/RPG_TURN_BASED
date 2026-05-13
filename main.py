@@ -70,17 +70,20 @@ def game_loop():
                 print("Shooup items:")
                 for i, item in enumerate(shop_items, 1):
                     print(f"{i}. {item.name}: {item.buy_price} coins")
-                c = input("Input the number of the item to buy.\n")
-                chosen = shop_items[int(c) - 1]
-                if player.coin > chosen.buy_price:
-                    if chosen in player.inventory:
-                        player.inventory[chosen.name] += 1
+                try:    
+                    c = int(input("Input the number of the item to buy.\n"))
+                    chosen = shop_items[c - 1]
+                    if player.coin > chosen.buy_price:
+                        if chosen in player.inventory:
+                            player.inventory[chosen.name] += 1
+                        else:
+                            player.inventory[chosen.name] = 1
                         player.coin -= chosen.buy_price
+                        print(f"You purchased {chosen.name}")
                     else:
-                        player.inventory[chosen.name] = 1
-                        player.coin -= chosen.buy_price
-                else:
-                    print("You don't have enough coins, you broke kid.")
+                        print("You don't have enough coins, you broke kid.")
+                except ValueError:
+                    print("Put a number, stoooopid.")                    
             else:
                 print("Put the correct terms.\n")
 
