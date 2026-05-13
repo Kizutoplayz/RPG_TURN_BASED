@@ -83,7 +83,9 @@ def game_loop():
                     else:
                         print("You don't have enough coins, you broke kid.")
                 except ValueError:
-                    print("Put a number, stoooopid.")                    
+                    print("Put a number, stoooopid.")
+                except IndexError:
+                    print("Are you even reading the list? There is no such item.")                    
             else:
                 print("Put the correct terms.\n")
 
