@@ -1,13 +1,13 @@
 import random as ra, math as ma, sys, os 
 from Stat import Player, Enemy
-
+from Items import Item, Weapon, Armor, shop_items
 
 #Misc
 def Name():
     p_name = input("Your Name: ")
     return p_name
 in_combat = False
-player = Player(Name(), 10, 100, 2)
+player = Player(Name(), 10, 20, 2, )
 enemy_names = ["Goblin", "Orc", "Troll", "Bandit", "Wolf", "Slime", "Gnome"]
 enemy_drops = {
     "Wolf": "Fur",
@@ -26,7 +26,7 @@ def game_loop():
 
 #Exploring
         if not in_combat:
-            c = input("Press [E] to explore | [P] for profile | [I] for inventory.\n")
+            c = input("Press [E] to explore | [P] for profile | [I] for inventory | [S] for shop. \n")
             os.system('cls' if os.name == 'nt' else 'clear')
             if c == "E" or c == "e":
                 print("You explore...\n")
@@ -40,7 +40,7 @@ def game_loop():
                         ra.randint(0,3),
                         1,
                         ra.randint(100,200),
-                        ra.randint(50,100),
+                        ra.randint(10,60),
                         ""
                         )
                     enemy.drop = enemy_drops.get(enemy.name, None)
@@ -58,10 +58,29 @@ def game_loop():
                 f"Health: {player.health}\n"
                 f"Attack: {player.attack}\n"
                 f"Defense: {player.defense}\n")
+
+#Player Inventory
             elif c == "I" or c == "i":
                 print("Inventory: ")
                 for k, v in player.inventory.items():
                     print(f"{k} : {v}")
+
+#Shoup
+            elif c == "S" or c == "s":
+                print("Shooup items:")
+                for i, item in enumerate(shop_items, 1):
+                    print(f"{i}. {item.name}: {item.buy_price} coins")
+                c = input("Input the number of the item to buy.\n")
+                chosen = shop_items[int(c) - 1]
+                if player.coin > chosen.buy_price:
+                    if chosen in player.inventory:
+                        player.inventory[chosen.name] += 1
+                        player.coin -= chosen.buy_price
+                    else:
+                        player.inventory[chosen.name] = 1
+                        player.coin -= chosen.buy_price
+                else:
+                    print("You don't have enough coins, you broke kid.")
             else:
                 print("Put the correct terms.\n")
 
@@ -84,6 +103,7 @@ def game_loop():
                     player.exp += enemy.exp
                     print(f"Exp Gained: {enemy.exp}")
                     player.coin += enemy.coin
+                    print(f"Coin Gained: {enemy.coin}")
                     item_encount = ra.randint(1,2)
                     if item_encount == 1:
                         print(f"You found an item: {enemy.drop}")
