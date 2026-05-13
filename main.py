@@ -86,7 +86,7 @@ def game_loop():
                     player.coin += enemy.coin
                     item_encount = ra.randint(1,2)
                     if item_encount == 1:
-                        print(f"You found and item: {enemy.drop}")
+                        print(f"You found an item: {enemy.drop}")
                         if enemy.drop in player.inventory:
                             player.inventory[enemy.drop] += 1
                         else:
