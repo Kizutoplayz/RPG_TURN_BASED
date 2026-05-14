@@ -1,4 +1,5 @@
 import random as ra
+from Areas import Area, list_o_area
 
 #Stats for player and enemies
 class Stats:
@@ -13,6 +14,9 @@ class Stats:
         self.s_coin = s_coin
 
 class Player(Stats):
+    def __init__(self, name, attack, health, defense, lvl= 1, exp=0, coin=0, s_coin=0, current_area=list_o_area[0]):
+        super().__init__(name, attack, health, defense, lvl,exp , coin, s_coin)
+        self.current_area = current_area
     def exp2lvlup(self):
         offset = ra.randint(1,10) / 10
         exp_2_lvlup = 100 * (self.lvl ** (1.2 + offset))
@@ -23,3 +27,4 @@ class Enemy(Stats):
     def __init__(self, name, attack, health, defense, lvl= 1, exp=0, coin=0, s_coin=0, drop=None):
         super().__init__(name, attack, health, defense, lvl,exp , coin, s_coin)
         self.drop = drop
+
