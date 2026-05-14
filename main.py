@@ -34,13 +34,13 @@ def game_loop():
                 if encount == 1:
                     in_combat = True
                     enemy = Enemy(
-                        ra.choice(enemy_names),
-                        ra.randint(1,5),
-                        ra.randint(10,20),
-                        ra.randint(0,3),
-                        1,
-                        ra.randint(100,200),
-                        ra.randint(10,60),
+                        ra.choice(enemy_names),  # name
+                        ra.randint(1,5),         # attack         
+                        ra.randint(10,20),       # health
+                        ra.randint(0,3),         # defence
+                        1,                       # level
+                        ra.randint(100,200),     # exp
+                        ra.randint(10,60),       # coin
                         ""
                         )
                     enemy.drop = enemy_drops.get(enemy.name, None)
