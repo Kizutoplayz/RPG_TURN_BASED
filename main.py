@@ -1,23 +1,16 @@
 import random as ra, math as ma, sys, os 
 from Stat import Player, Enemy
 from Items import Item, Weapon, Armor, shop_items
+from Areas import list_o_area, enemy_drops
 
-#Misc
+
+#Player Data
 def Name():
     p_name = input("Your Name: ")
     return p_name
-in_combat = False
 player = Player(Name(), 10, 20, 2, )
-enemy_names = ["Goblin", "Orc", "Troll", "Bandit", "Wolf", "Slime", "Gnome"]
-enemy_drops = {
-    "Wolf": "Fur",
-    "Goblin": "Leather",
-    "Orc" : "placeholder",
-    "Troll" : "placeholder",
-    "Bandit" : "placeholder",
-    "Slime" : "Slime Ball",
-    "Gnome" : "placeholder",
-}
+in_combat = False
+
 
 #Main game loop
 def game_loop():
@@ -26,26 +19,32 @@ def game_loop():
 
 #Exploring
         if not in_combat:
-            c = input("Press [E] to explore | [P] for profile | [I] for inventory | [S] for shop. \n")
+            c = input("Press [E] to explore | [P] for profile | [M] for available menus. \n")
             os.system('cls' if os.name == 'nt' else 'clear')
             if c == "E" or c == "e":
                 print("You explore...\n")
                 encount = ra.randint(1,3)
                 if encount == 1:
-                    in_combat = True
+                    #Creating Enemy
                     enemy = Enemy(
-                        ra.choice(enemy_names),  # name
-                        ra.randint(1,5),         # attack         
+                        ra.choice(player.current_area.enemy_pool),  # name
+                        ra.randint(1,5),         # attack
                         ra.randint(10,20),       # health
-                        ra.randint(0,3),         # defence
+                        ra.randint(0,3),         # defense
                         1,                       # level
                         ra.randint(100,200),     # exp
                         ra.randint(10,60),       # coin
-                        ""
+                        ""                       # drops
                         )
                     enemy.drop = enemy_drops.get(enemy.name, None)
-                else:
-                    in_combat = False
+                    in_combat = True
+                    
+
+#Mining
+                # else:
+                #     c = input(print("You found glowing rock. What might it be? Press [M] to mine.\n"))
+                #     if c == "Mi" or c == "mi":
+                #         print("")
 
 #PLayer Profile
             elif c == "P" or c == "p":
@@ -88,6 +87,34 @@ def game_loop():
                     print("Put a number, stoooopid.")
                 except IndexError:
                     print("Are you even reading the list? There is no such item.")                    
+
+#List of Areas
+            elif c == "W" or c == "w":
+                print("World Map.")
+                print(f"Current Area: {player.current_area.name}")
+                for i, area in enumerate(list_o_area, 1):
+                    print(f"{i}.{area.name}") 
+                try:
+                    c = int(input("\nTravel to the areas by pressing the numbers:\n"))
+                    chosen = list_o_area[c - 1]
+                    if chosen.is_unlocked:
+                        player.current_area = chosen
+                    else:
+                        print("You never even been there, how will you go back to the place where you never went?")
+                except TypeError:
+                    print("Again, its only numbers.")
+                except IndexError:
+                    print("You wanna go to narnia or something? Put only the available ones.")
+
+
+
+#List of Commands
+            elif c == "M" or c == "m":
+                print("List of Commands: ")
+                print("[I] for Inventory\n"
+                      "[S] for Shop\n"
+                      "[W] for World Map\n"
+                      "[Mi] for Mining\n")
             else:
                 print("Put the correct terms.\n")
 
