@@ -21,7 +21,7 @@ class Player(Stats):
         offset = ra.randint(1,10) / 10
         exp_2_lvlup = 100 * (self.lvl ** (1.2 + offset))
         return exp_2_lvlup
-    inventory = {}
+    inventory = {"Fur" : 100, "Slime Ball" : 100} 
 
 class Enemy(Stats):
     def __init__(self, name, attack, health, defense, lvl= 1, exp=0, coin=0, s_coin=0, drop=None):

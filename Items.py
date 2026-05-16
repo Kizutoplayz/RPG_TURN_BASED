@@ -18,11 +18,18 @@ class Armor(Item):
 
 #Shop Items
 HealthPotion = Item("Health Potion", "Consumable", 10, 5, "Common")
-BasicSword = Weapon("Basic Sword", "Weapon", 50, 40, "Common", 3)
-BasicArmor = Armor("Basic Armor", "Armor", 70, 60, "Common", 5)
-BasicCrate = Item("Basic Crate", "Consumable", 100, "Common", None)
+BasicSword = Weapon("Basic Sword", "Weapon", 50, 30, "Common", 3)
+BasicArmor = Armor("Basic Armor", "Armor", 70, 50, "Common", 5)
+BasicCrate = Item("Basic Crate", "Consumable", 100, None, "Common")
 
 shop_items = [HealthPotion, BasicSword, BasicArmor, BasicCrate]
+
+#Armors
+fur_armor = Armor("Fur Armor", "Armor", None, 100, "Common", 10)
+
+#Misc
+fur = Item("Fur", "Material", None, 5, "Common")
+slime_ball = Item("Slime Ball", "Material", None, 3, "Common")
 
 #Ores
 wood = Item("Wood", "Ore", None, 2, "Common")
@@ -40,3 +47,12 @@ mana_crsytal = Item("Mana Crystal", "Ore", None, 200, "Legendary")
 venom_crystal = Item("Venom Crystal", "Ore", None, 400, "Legendary")
 serpent_scale = Item("Serpent Scale", "Ore", None, 1000, "Omega")
 obsidian = Item("Obsidian", "Ore", None, 90, "Epic")
+
+
+
+#LookUp Table
+item_lookup = {
+    "Fur Armor": fur_armor,
+    "Wood": wood,
+    "Stone": stone
+}
