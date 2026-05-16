@@ -41,7 +41,7 @@ class DiceRoll(Gamble):
 
             print("-------Dice Roll-------")
             print(f"Dice 1: {dice1}")
-            print(f"DIce 2: {dice2}")
+            print(f"Dice 2: {dice2}")
             if total >= 5 and total <= 9:
                 print(f"You won {result} coins.")
             elif total == 4 or total == 10:
