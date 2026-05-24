@@ -1,0 +1,11 @@
+{
+    "Fur Armor": {
+        "ingredients": {
+            "Fur": 10,
+            "Slime Ball": 5
+        },
+        "result": "Fur Armor",
+        "amount": 1
+    }
+}
+

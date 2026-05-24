@@ -1,8 +1,8 @@
 import random as ra, math as ma, sys, os 
 from Stat import Player, Enemy
-from Items import Item, Weapon, Armor, shop_items
+from Items import Item, Weapon, Armor, shop_items, item_lookup
 from Areas import list_o_area, enemy_drops
-
+import json
 
 #Player Data
 def Name():
@@ -39,12 +39,49 @@ def game_loop():
                     enemy.drop = enemy_drops.get(enemy.name, None)
                     in_combat = True
                     
-
 #Mining
                 # else:
                 #     c = input(print("You found glowing rock. What might it be? Press [M] to mine.\n"))
                 #     if c == "Mi" or c == "mi":
                 #         print("")
+
+#Crafting
+            elif c == "C" or c == "c":
+                with open("recipe.json", "r") as f:
+                    recipes = json.load(f)
+                i = 0
+                for recipe_name, details in recipes.items():
+                    i += 1
+                    print(f"{i}. {recipe_name}: ")
+                    for ingredient, amount in details["ingredients"].items():
+                        print(f"       {ingredient} x{amount}")
+                try:
+                    c = input("Choose a number to craft and its quanity: ").split()
+                    recipe_name = list(recipes.keys())
+                    chosen_name = recipe_name[int(c[0]) -1]
+                    chosen = recipes[chosen_name]
+                    q = int(c[1]) if len(c) > 1 else 1
+                    can_craft = True
+                    for ingredient, amount in chosen["ingredients"].items():
+                        if player.inventory.get(ingredient, 0) < amount * q:
+                            can_craft = False
+                            print(f"\nDid you even check your inventory before crafting? You don't have enough items.\n")
+                            break
+                    if can_craft:
+                        for ingredient, amount in chosen["ingredients"].items():
+                            player.inventory[ingredient] -= amount * q
+                            if player.inventory[ingredient] <= 0:
+                                del player.inventory[ingredient]
+                        result_item = item_lookup[chosen["result"]]
+                        if chosen["result"] in player.inventory:
+                            player.inventory[result_item.name] += 1 * q
+                        else:
+                            player.inventory[result_item.name] = 1 * q
+                        print(f"\nYou crafted {q} {chosen_name}")
+                except ValueError:
+                    print("\nDid you even read? Put numbers.\n")
+                except IndexError:
+                    print("\nWere you trying to craft a non existent object?\n")
 
 #PLayer Profile
             elif c == "P" or c == "p":
@@ -56,7 +93,8 @@ def game_loop():
                 f"Special Coins: {player.s_coin}\n"
                 f"Health: {player.health}\n"
                 f"Attack: {player.attack}\n"
-                f"Defense: {player.defense}\n")
+                f"Defense: {player.defense}\n"
+                f"Current Area: {player.current_area}\n")
 
 #Player Inventory
             elif c == "I" or c == "i":
@@ -74,7 +112,7 @@ def game_loop():
                     chosen = shop_items[int(c[0]) - 1]
                     b = chosen.buy_price
                     q = int(c[1]) if len(c) > 1 else 1
-                    if player.coin > b * q:
+                    if player.coin >= b * q:
                         if chosen in player.inventory:
                             player.inventory[chosen.name] += 1 * q
                         else:
@@ -114,7 +152,8 @@ def game_loop():
                 print("[I] for Inventory\n"
                       "[S] for Shop\n"
                       "[W] for World Map\n"
-                      "[Mi] for Mining\n")
+                      "[Mi] for Mining\n"
+                      "[C] for Crating Menu\n")
             else:
                 print("Put the correct terms.\n")
 
